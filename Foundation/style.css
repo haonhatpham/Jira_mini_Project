@@ -221,6 +221,144 @@ footer {
   }
 }
 
+.dashboard-card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 16px;
+  padding: 20px;
+  margin-top: 24px;
+}
+
+.dashboard-grid {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  margin-top: 16px;
+}
+
+.dashboard-card section {
+  padding: 16px;
+  border: 1px solid #eee;
+  border-radius: 16px;
+  min-height: 120px;
+  background: #fafafa;
+}
+
+.content.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  background: #f4f4f4;
+  border-radius: 14px;
+  position: relative;
+  overflow: hidden;
+}
+
+.content.skeleton::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0) 100%);
+  animation: shimmer 1.4s infinite;
+}
+
+.content.skeleton > .skeleton-line {
+  position: relative;
+  z-index: 1;
+  height: 14px;
+  background: #e5e5e5;
+  border-radius: 999px;
+}
+
+.content.skeleton > .skeleton-line.short {
+  width: 60%;
+}
+
+@keyframes shimmer {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.register-card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 16px;
+  padding: 20px;
+  margin-top: 24px;
+}
+
+.register-card .form-field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 14px;
+}
+
+.register-card label {
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.register-card input {
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 1rem;
+}
+
+.error-message {
+  margin-top: 6px;
+  color: #b12a2a;
+  font-size: 0.9rem;
+  min-height: 1.2rem;
+}
+
+.strength-meter {
+  background: #eee;
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.strength-bar {
+  width: 0%;
+  height: 100%;
+  background: #ccc;
+  transition: width 0.2s ease, background 0.2s ease;
+}
+
+.strength-text {
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.register-card button {
+  width: 100%;
+  border: none;
+  border-radius: 10px;
+  background: #111;
+  color: #fff;
+  padding: 12px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.register-card button:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}
+
+.success-message {
+  margin-top: 14px;
+  color: #117a37;
+  font-size: 0.95rem;
+}
+
 @media (max-width: 640px) {
   .calc-display {
     font-size: 1.6rem;

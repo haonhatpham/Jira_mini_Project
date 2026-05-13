@@ -11,7 +11,7 @@
       <h1>D3 - Calculator</h1>
     </header>
     <main>
-      <article class="calculator" id="calculator">
+       <!-- <article class="calculator" id="calculator">
         <div class="calc-shell">
           <h2 class="page-title">Smart Calculator</h2>
           <div class="calc-display" id="display">0</div>
@@ -39,13 +39,60 @@
 
             <button type="button" data-action="digit" data-value=".">.</button>
           </div>
+        </div>
         <div class="history-panel" id="history-panel">
           <h2>Calculation History</h2>
           <ul class="history-list" id="history"></ul>
         </div>
-      </article>
+      </article> -->
 
-      <article class="todo-app" id="todo-app">
+      <!-- <article class="register-card" id="register-card">
+        <h2 class="page-title">Register</h2>
+        <form id="register-form" novalidate>
+          <div class="form-field">
+            <label for="name">Name</label>
+            <input id="name" name="name" type="text" />
+            <span class="error-message" id="name-error"></span>
+          </div>
+
+          <div class="form-field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" />
+            <span class="error-message" id="email-error"></span>
+          </div>
+
+          <div class="form-field">
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" />
+            <span class="error-message" id="password-error"></span>
+          </div>
+
+          <div class="form-field">
+            <label for="confirm">Confirm Password</label>
+            <input id="confirm" name="confirm" type="password" />
+            <span class="error-message" id="confirm-error"></span>
+          </div>
+
+          <div class="form-field">
+            <label for="phone">Phone</label>
+            <input id="phone" name="phone" type="tel" />
+            <span class="error-message" id="phone-error"></span>
+          </div>
+
+          <div class="form-field strength-field">
+            <div class="strength-meter">
+              <div class="strength-bar" id="strength-bar"></div>
+            </div>
+            <span class="strength-text" id="strength-text">Password strength</span>
+          </div>
+
+          <button id="register-submit" type="submit" disabled>Register</button>
+          <p class="success-message" id="register-success"></p>
+        </form>
+      </article> -->
+
+      <!--Day 4-->
+      <!-- <article class="todo-app" id="todo-app">
         <h2 class="page-title">Task List</h2>
         <div class="todo-input">
           <input id="task-input" type="text" placeholder="Add a task" />
@@ -60,6 +107,35 @@
           </div>
         </div>
         <ul id="task-list" class="task-list"></ul>
+      </article>  -->
+
+      <!--Day 5-->
+      <article class="dashboard-card" id="dashboard-card">
+        <h2 class="page-title">Async Test</h2>
+        <div class="dashboard-grid">
+          <section id="weather">
+            <h3>Weather</h3>
+            <div class="content skeleton">
+              <div class="skeleton-line short"></div>
+              <div class="skeleton-line"></div>
+            </div>
+          </section>
+          <section id="crypto">
+            <h3>Crypto</h3>
+            <div class="content skeleton">
+              <div class="skeleton-line short"></div>
+              <div class="skeleton-line"></div>
+            </div>
+          </section>
+          <section id="quote">
+            <h3>Quote</h3>
+            <div class="content skeleton">
+              <div class="skeleton-line"></div>
+              <div class="skeleton-line"></div>
+              <div class="skeleton-line short"></div>
+            </div>
+          </section>
+        </div>
       </article>
     </main>
 
@@ -67,7 +143,9 @@
       <p>© 2026</p>
     </footer>
     <script src="calculator.js"></script>
-    <script src="ui.js"></script>
+    <script src="ui.js"></script> 
     <script src="tasks.js"></script>
+    <script src="register.js"></script>
+    <script src="AsyncTest.js"></script>
   </body>
 </html>
