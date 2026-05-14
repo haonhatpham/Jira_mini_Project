@@ -1,16 +1,14 @@
 var display = document.getElementById('display');
 var historyList = document.getElementById('history');
 var buttons = document.querySelectorAll('.button-grid button:not(.placeholder)');
-var calculator = new Calculator();
 
-// hiển thị kết nội dung của calculator
 function updateDisplay() {
-  display.textContent = calculator.getDisplay();
+  display.textContent = getDisplay();
 }
-//hiển thị lịch sử
+
 function updateHistory() {
   historyList.innerHTML = '';
-  calculator.history.forEach(function (item) {
+  calcHistory.forEach(function (item) {
     var li = document.createElement('li');
     var expression = document.createElement('span');
     var result = document.createElement('span');
@@ -30,32 +28,32 @@ function updateHistory() {
 function handleButton(action, value) {
   switch (action) {
     case 'digit':
-      calculator.appendDigit(value);
+      appendDigit(value);
       updateDisplay();
       break;
     case 'operator':
-      calculator.appendOperator(value);
+      appendOperator(value);
       updateDisplay();
       break;
     case 'calculate':
-      var result = calculator.calculate();
+      var result = calculate();
       if (result.error) {
         display.textContent = 'Error';
-        calculator.clear();
+        clearCalculator();
         return;
       }
       updateDisplay();
       updateHistory();
       break;
     case 'clear':
-      calculator.clear();
+      clearCalculator();
       updateDisplay();
       break;
     default:
       break;
   }
 }
-// bắt sự kiện click cho tất cả các nút và gọi handleButton với action và value tương ứng
+
 buttons.forEach(function (button) {
   button.addEventListener('click', function () {
     handleButton(button.dataset.action, button.dataset.value);

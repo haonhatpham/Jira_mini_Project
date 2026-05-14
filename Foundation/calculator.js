@@ -1,80 +1,105 @@
-//tạo đối tượng Calculator 
-function Calculator() {
-  this.current = '';
-  this.history = [];
+// Trạng thái hiện tại
+var current = '';
+var calcHistory = [];
+
+function getDisplay() {
+  return current || '0';
 }
-//định nghĩa các phương thức cho đối tượng Calculator
-// getDisplay trả về chuỗi hiện tại hoặc '0' nếu chuỗi rỗng
-Calculator.prototype.getDisplay = function () {
-  return this.current || '0';
-};
-// Phương thức appendDigit thêm một chữ số hoặc dấu chấm vào chuỗi hiện tại, kiểm tra để tránh thêm nhiều dấu chấm trong cùng một số
-Calculator.prototype.appendDigit = function (value) {
+
+function appendDigit(value) {
   if (value === '.') {
-    var lastNumber = this.current.split(/[+\-×÷]/).pop();
+    var lastNumber = current.split(/[+\-×÷]/).pop();
     if (lastNumber.indexOf('.') !== -1) {
       return;
     }
     if (lastNumber === '') {
-      this.current += '0';
+      current += '0';
     }
   }
-  this.current += value;
-};
-// appendOperator thêm 1 phép toán vào cuối chuỗi 
-Calculator.prototype.appendOperator = function (operator) {
-  if (!this.current) {
+
+  current += value;
+}
+
+function appendOperator(operator) {
+  if (!current) {
     return;
   }
-  if (/[+\-×÷]$/.test(this.current)) {
-    this.current = this.current.slice(0, -1) + operator;
+
+  if (/[+\-×÷]$/.test(current)) {
+    current = current.slice(0, -1) + operator;
   } else {
-    this.current += operator;
+    current += operator;
   }
-};
-// clear xóa chuỗi hiện tại
-Calculator.prototype.clear = function () {
-  this.current = '';
-};
-// Xử lí tính toán và lưu lịch sử
-Calculator.prototype.calculate = function () {
-  if (!this.current) {
-    return { error: false, value: this.getDisplay() };
+}
+
+function clearCalculator() {
+  current = '';
+}
+
+function operate(a, b, operator) {
+  var num1 = Number(a);
+  var num2 = Number(b);
+
+  if (isNaN(num1) || isNaN(num2)) {
+    return b;
   }
 
-  // Xóa toán tử cuối nếu có
-  this.current = this.current.replace(/[+\-×÷]$/, '');
+  if (operator === '+') {
+    return Number((num1 + num2).toFixed(10));
+  }
+  if (operator === '-') {
+    return Number((num1 - num2).toFixed(10));
+  }
+  if (operator === '×') {
+    return Number((num1 * num2).toFixed(10));
+  }
+  if (operator === '÷') {
+    return num2 === 0 ? 'Error' : Number((num1 / num2).toFixed(10));
+  }
 
-  const expression = this.current
-    .replace(/×/g, '*')
-    .replace(/÷/g, '/');
+  return b;
+}
 
-  try {
-    //tính toán kết quả
-    const result = eval(expression);
-    // kiểm tra lỗi null, chia cho 0,...
-    if (!isFinite(result)) {
-      throw new Error();
+function calculate() {
+  if (!current) {
+    return { error: false, value: getDisplay() };
+  }
+
+  current = current.replace(/[+\-×÷]$/, '');
+
+  var opPos = -1;
+  var operator = '';
+  for (var i = 0; i < current.length; i += 1) {
+    var ch = current[i];
+    if (ch === '+' || ch === '-' || ch === '×' || ch === '÷') {
+      opPos = i;
+      operator = ch;
+      break;
     }
+  }
 
-    const finalResult = Number.isInteger(result)? result : parseFloat(result.toFixed(10));
+  if (opPos === -1) {
+    return { error: false, value: getDisplay() };
+  }
 
-    // Lưu lịch sử
-    this.history.unshift({
-      expression: this.current,
-      result: finalResult
-    });
+  var left = current.substring(0, opPos);
+  var right = current.substring(opPos + 1);
+  var result = operate(left, right, operator);
 
-    this.history = this.history.slice(0, 10);
-
-    this.current = String(finalResult);
-
-    return {
-      error: false,
-      value: this.current
-    };
-
-  } catch {
+  if (result === 'Error' || isNaN(result)) {
+    calcHistory.push({ expression: current, result: 'Error' });
+    if (calcHistory.length > 10) {
+      calcHistory.splice(0, calcHistory.length - 10);
+    }
     return { error: true };
   }
-};
+
+  calcHistory.push({ expression: current, result: result });
+  if (calcHistory.length > 10) {
+    calcHistory.splice(0, calcHistory.length - 10);
+  }
+
+  current = String(result);
+
+  return { error: false, value: current };
+}
