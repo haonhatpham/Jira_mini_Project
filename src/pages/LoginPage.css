@@ -1,0 +1,23 @@
+.login-page {
+  padding: 48px 20px;
+  text-align: center;
+}
+
+.login-hint {
+  color: #6b7280;
+  margin-bottom: 20px;
+}
+
+.login-btn {
+  padding: 10px 24px;
+  background: #0284c7;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.login-btn:hover {
+  background: #0369a1;
+}
