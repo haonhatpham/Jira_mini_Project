@@ -1,0 +1,30 @@
+.async-state {
+  padding: 48px 20px;
+  text-align: center;
+}
+
+.async-state.loading {
+  color: #6b7280;
+}
+
+.async-state.error p {
+  color: #dc2626;
+  margin-bottom: 12px;
+}
+
+.async-state.empty {
+  color: #6b7280;
+}
+
+.async-retry-btn {
+  padding: 8px 20px;
+  background: #0284c7;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.async-retry-btn:hover {
+  background: #0369a1;
+}

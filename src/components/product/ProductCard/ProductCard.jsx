@@ -1,9 +1,15 @@
 import { Link } from "react-router-dom";
+import { selectAddToCart, useCartStore } from "../../../stores/cartStore";
 import "./ProductCard.css";
 
-export default function ProductCard({ id, name, price, onAddToCart }) {
+export default function ProductCard({ id, name, price, imageUrl }) {
+  const addToCart = useCartStore(selectAddToCart);
+
   return (
     <div className="card">
+      {imageUrl && (
+        <img src={imageUrl} alt={name} className="card-image" />
+      )}
       <Link to={`/products/${id}`} className="card-title-link">
         <h3>{name}</h3>
       </Link>
@@ -15,7 +21,7 @@ export default function ProductCard({ id, name, price, onAddToCart }) {
         <button
           type="button"
           className="add-to-cart-btn"
-          onClick={() => onAddToCart({ id, name, price })}
+          onClick={() => addToCart({ id, name, price, imageUrl })}
         >
           Add to Cart
         </button>

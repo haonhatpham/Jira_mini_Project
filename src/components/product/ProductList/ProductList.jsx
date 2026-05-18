@@ -1,8 +1,7 @@
-import { products } from "../../../data/products";
 import ProductCard from "../ProductCard/ProductCard.jsx";
 import "./ProductList.css";
 
-export default function ProductList({ onAddToCart }) {
+export default function ProductList({ products }) {
   return (
     <div id="products-container">
       {products.map((product) => (
@@ -11,7 +10,7 @@ export default function ProductList({ onAddToCart }) {
           id={product.id}
           name={product.name}
           price={product.price}
-          onAddToCart={onAddToCart}
+          imageUrl={product.imageUrl}
         />
       ))}
     </div>

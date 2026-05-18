@@ -1,10 +1,17 @@
+import {
+  selectCartItems,
+  selectCartTotal,
+  selectRemoveFromCart,
+  selectUpdateCartQuantity,
+  useCartStore,
+} from "../../../stores/cartStore";
 import "./Cart.css";
 
-export default function Cart({ items, onRemove, onUpdateQuantity }) {
-  const total = items.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0,
-  );
+export default function Cart() {
+  const items = useCartStore(selectCartItems);
+  const total = useCartStore(selectCartTotal);
+  const removeFromCart = useCartStore(selectRemoveFromCart);
+  const updateQuantity = useCartStore(selectUpdateCartQuantity);
 
   if (items.length === 0) {
     return (
@@ -32,7 +39,7 @@ export default function Cart({ items, onRemove, onUpdateQuantity }) {
               <button
                 type="button"
                 className="qty-btn"
-                onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}
+                onClick={() => updateQuantity(item.id, item.quantity - 1)}
               >
                 −
               </button>
@@ -40,7 +47,7 @@ export default function Cart({ items, onRemove, onUpdateQuantity }) {
               <button
                 type="button"
                 className="qty-btn"
-                onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
+                onClick={() => updateQuantity(item.id, item.quantity + 1)}
               >
                 +
               </button>
@@ -53,7 +60,7 @@ export default function Cart({ items, onRemove, onUpdateQuantity }) {
             <button
               type="button"
               className="remove-btn"
-              onClick={() => onRemove(item.id)}
+              onClick={() => removeFromCart(item.id)}
             >
               ✕
             </button>

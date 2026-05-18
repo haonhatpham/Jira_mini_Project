@@ -1,9 +1,16 @@
 import { NavLink } from "react-router-dom";
-import { useAuth } from "../../../context/AuthContext";
+import { selectCartCount, useCartStore } from "../../../stores/cartStore";
+import {
+  selectIsLoggedIn,
+  selectLogout,
+  useAuthStore,
+} from "../../../stores/authStore";
 import "./Header.css";
 
-export default function Header({ cartCount }) {
-  const { isLoggedIn, logout } = useAuth();
+export default function Header() {
+  const cartCount = useCartStore(selectCartCount);
+  const isLoggedIn = useAuthStore(selectIsLoggedIn);
+  const logout = useAuthStore(selectLogout);
 
   return (
     <header className="header">
@@ -21,6 +28,14 @@ export default function Header({ cartCount }) {
             }
           >
             Home
+          </NavLink>
+          <NavLink
+            to="/products/new"
+            className={({ isActive }) =>
+              isActive ? "nav-link active" : "nav-link"
+            }
+          >
+            Add Product
           </NavLink>
           <NavLink
             to="/cart"

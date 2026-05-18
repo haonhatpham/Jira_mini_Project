@@ -1,0 +1,57 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "iPhone",
+      "price": 1000,
+      "description": "Latest Apple smartphone with A-series chip.",
+      "category": "Phone",
+      "tags": ["apple", "flagship"],
+      "imageUrl": ""
+    },
+    {
+      "id": 2,
+      "name": "Samsung",
+      "price": 900,
+      "description": "Flagship Galaxy with vibrant AMOLED display.",
+      "category": "Phone",
+      "tags": ["android"],
+      "imageUrl": ""
+    },
+    {
+      "id": 3,
+      "name": "Xiaomi",
+      "price": 500,
+      "description": "Great value phone with solid battery life.",
+      "category": "Phone",
+      "tags": ["budget"],
+      "imageUrl": ""
+    },
+    {
+      "id": 4,
+      "name": "Oppo",
+      "price": 400,
+      "description": "Slim design and fast charging support.",
+      "category": "Phone",
+      "tags": ["budget"],
+      "imageUrl": ""
+    },
+    {
+      "id": 5,
+      "name": "Pixel",
+      "price": 800,
+      "description": "Pure Android experience with excellent camera.",
+      "category": "Phone",
+      "tags": ["google", "camera"],
+      "imageUrl": ""
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "username": "admin",
+      "password": "123",
+      "token": "mock-jwt-token-admin"
+    }
+  ]
+}
