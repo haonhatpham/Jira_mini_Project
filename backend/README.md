@@ -9,6 +9,21 @@ npm install
 npm run dev
 ```
 
+Create `.env` from `.env.example` and update the PostgreSQL password:
+
+```env
+DATABASE_URL=postgres://postgres:your_password@localhost:5432/training_program
+PORT=3001
+```
+
+Run the database scripts in pgAdmin Query Tool:
+
+```txt
+db/schema.sql
+db/seed.sql
+db/verify.sql
+```
+
 The API runs on:
 
 ```txt
@@ -25,7 +40,7 @@ http://localhost:3001/api/openapi.json
 ## Endpoints
 
 ```txt
-GET  /api/products
+GET  /api/products?page=1&limit=10&sort=price&order=desc&search=phone
 GET  /api/products/:id
 POST /api/products
 PUT  /api/products/:id
@@ -58,9 +73,82 @@ Unknown fields are rejected with `400 Validation failed`.
 
 ### GET /api/products
 
-Returns all products.
+Returns products from PostgreSQL with pagination, sorting, search, and filters.
+
+Query parameters:
+
+```txt
+page      Positive integer. Default: 1
+limit     Positive integer. Default: 10. Maximum effective value: 100
+sort      One of: id, name, price, category, createdAt, updatedAt
+order     asc or desc
+search    Keyword matched against product name, description, category, or tags
+category  One of: Phone, Tablet, Accessory, Other
+minPrice  Number greater than or equal to 0
+maxPrice  Number greater than or equal to 0
+```
+
+Example:
+
+```http
+GET /api/products?page=1&limit=10&sort=price&order=desc&search=phone&category=Phone&minPrice=100&maxPrice=1200
+```
 
 Status: `200 OK`
+
+Response:
+
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "name": "iPhone 16 Pro",
+      "description": "Premium Apple smartphone with powerful camera and fast performance.",
+      "price": 1199,
+      "category": "Phone",
+      "tags": ["apple", "camera", "flagship", "ios"],
+      "imageUrl": "https://picsum.photos/seed/iphone-16-pro/800/600",
+      "createdAt": "2026-05-20T03:30:00.000Z",
+      "updatedAt": "2026-05-20T03:30:00.000Z"
+    }
+  ],
+  "pagination": {
+    "total": 3,
+    "page": 1,
+    "limit": 10,
+    "totalPages": 1,
+    "hasNextPage": false,
+    "hasPrevPage": false
+  },
+  "sort": {
+    "sort": "price",
+    "order": "desc"
+  },
+  "filters": {
+    "search": "phone",
+    "category": "Phone",
+    "minPrice": 100,
+    "maxPrice": 1200
+  }
+}
+```
+
+If a client requests a huge limit such as `limit=1000000`, the API clamps it to
+`100` before querying the database. This prevents one request from loading too
+many rows into memory.
+
+If PostgreSQL is unavailable, the API returns:
+
+```txt
+503 Service Unavailable
+```
+
+```json
+{
+  "message": "Database unavailable"
+}
+```
 
 ### GET /api/products/:id
 
@@ -167,7 +255,8 @@ Response:
 ```txt
 backend/
   server.js               Express app setup and entry point
-  config/db.js            JSON database reader/writer
+  config/db.js            PostgreSQL pool and legacy JSON helpers
+  db/                     PostgreSQL schema, seed, and verify scripts
   controllers/            Request/response handlers
   services/               Business logic
   models/                 Data access logic
@@ -181,6 +270,13 @@ backend/
   `/api/products/:id`.
 - Controllers stay thin and delegate business logic to services.
 - Services validate inputs and throw meaningful HTTP errors.
-- Product data is stored in an in-memory array seeded from `db.json`.
+- Product data is stored in PostgreSQL using parameterized queries.
+- Product list queries are filtered, searched, sorted, and paginated in
+  PostgreSQL instead of loading every row into JavaScript.
+- Product sorting uses a whitelist of allowed columns, and query values are
+  parameterized to avoid injection.
+- Product list responses include pagination metadata and clamp `limit` to a
+  maximum of `100`.
+- PostgreSQL connection pooling is configured with `pg.Pool`.
 - Error middleware returns clean JSON error messages without stack traces.
 - Request logging middleware records method, URL, status code, and duration.

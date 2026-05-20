@@ -1,9 +1,9 @@
 import api from "../api/axiosInstance";
 import { API_PATHS } from "../api/paths";
-import type { Product, ProductFormValues } from "../types";
+import type { Product, ProductFormValues, ProductListResponse } from "../types";
 import { parseTagsInput } from "../utils/product.util";
 
-function mapFormToApiBody(form: ProductFormValues): Omit<Product, "id"> {
+function mapFormToApiBody(form: ProductFormValues): Omit<Product, "id" | "createdAt" | "updatedAt"> {
   return {
     name: form.name.trim(),
     description: form.desc.trim(),
@@ -15,8 +15,8 @@ function mapFormToApiBody(form: ProductFormValues): Omit<Product, "id"> {
 }
 
 export const productService = {
-  async getProducts(): Promise<Product[]> {
-    const { data } = await api.get<Product[]>(API_PATHS.PRODUCTS.LIST);
+  async getProducts(): Promise<ProductListResponse> {
+    const { data } = await api.get<ProductListResponse>(API_PATHS.PRODUCTS.LIST);
     return data;
   },
 

@@ -5,6 +5,7 @@ import { getErrorMessage } from "../utils/apiError.util";
 export function useProductList() {
   const [status, setStatus] = useState("loading");
   const [products, setProducts] = useState([]);
+  const [pagination, setPagination] = useState(null);
   const [error, setError] = useState(null);
   const cleanupRef = useRef(() => {});
 
@@ -23,13 +24,15 @@ export function useProductList() {
 
     productService
       .getProducts()
-      .then((data) => {
+      .then((response) => {
         if (!isActive) return;
-        if (data.length === 0) {
+        if (response.data.length === 0) {
           setProducts([]);
+          setPagination(response.pagination);
           setStatus("empty");
         } else {
-          setProducts(data);
+          setProducts(response.data);
+          setPagination(response.pagination);
           setStatus("data");
         }
       })
@@ -49,5 +52,5 @@ export function useProductList() {
     load();
   }, [load]);
 
-  return { status, products, error, retry };
+  return { status, products, pagination, error, retry };
 }

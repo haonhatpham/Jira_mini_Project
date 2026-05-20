@@ -10,6 +10,30 @@ export interface Product {
   category: ProductCategory;
   tags: string[];
   imageUrl: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface ProductListResponse {
+  data: Product[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+  };
+  sort: {
+    sort: string;
+    order: "asc" | "desc";
+  };
+  filters: {
+    search: string;
+    category: string;
+    minPrice: number | null;
+    maxPrice: number | null;
+  };
 }
 
 export interface ProductFormValues {
