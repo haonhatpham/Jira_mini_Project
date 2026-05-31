@@ -1,0 +1,143 @@
+.register-page {
+  max-width: 380px;
+  margin: 0 auto;
+  padding: 48px 20px;
+  text-align: center;
+}
+
+.register-error {
+  color: #b91c1c;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+  text-align: left;
+}
+
+.register-field {
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.register-field label {
+  display: block;
+  margin-bottom: 6px;
+  color: #111827;
+  font-weight: 650;
+}
+
+.register-field input {
+  width: 100%;
+  height: 42px;
+  padding: 8px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.register-field input[aria-invalid="true"] {
+  border-color: #dc2626;
+}
+
+.register-field-error {
+  margin: 6px 0 0;
+  color: #dc2626;
+  font-size: 0.82rem;
+}
+
+.password-strength {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.password-strength-meter {
+  height: 8px;
+  overflow: hidden;
+  background: #e5e7eb;
+  border-radius: 999px;
+}
+
+.password-strength-fill {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: inherit;
+  transition:
+    width 160ms ease,
+    background-color 160ms ease;
+}
+
+.password-strength-fill--empty {
+  background: transparent;
+}
+
+.password-strength-fill--weak {
+  background: #dc2626;
+}
+
+.password-strength-fill--medium {
+  background: #d97706;
+}
+
+.password-strength-fill--strong {
+  background: #16a34a;
+}
+
+.password-strength-label {
+  min-width: 92px;
+  color: #6b7280;
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-align: right;
+}
+
+.password-strength-label--weak {
+  color: #b91c1c;
+}
+
+.password-strength-label--medium {
+  color: #92400e;
+}
+
+.password-strength-label--strong {
+  color: #15803d;
+}
+
+.register-btn {
+  width: 100%;
+  height: 44px;
+  padding: 0 24px;
+  background: #111827;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.register-btn:hover:not(:disabled) {
+  background: #020617;
+}
+
+.register-btn:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+}
+
+.register-switch {
+  margin-top: 18px;
+  color: #6b7280;
+  font-size: 0.92rem;
+}
+
+.register-switch a {
+  color: #111827;
+  font-weight: 800;
+}

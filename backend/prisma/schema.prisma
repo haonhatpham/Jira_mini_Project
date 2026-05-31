@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  username     String   @unique @db.VarChar(80)
+  email        String   @unique @db.VarChar(255)
+  passwordHash String   @map("password_hash")
+  role         String   @default("customer") @db.VarChar(30)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model Category {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique @db.VarChar(50)
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  products  Product[]
+
+  @@map("categories")
+}
+
+model Product {
+  id          Int          @id @default(autoincrement())
+  name        String       @db.VarChar(120)
+  description String
+  price       Decimal      @db.Decimal(10, 2)
+  categoryId  Int          @map("category_id")
+  imageUrl    String       @default("") @map("image_url")
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+  category    Category     @relation(fields: [categoryId], references: [id])
+  productTags ProductTag[]
+
+  @@map("products")
+}
+
+model Tag {
+  id          Int          @id @default(autoincrement())
+  name        String       @unique @db.VarChar(50)
+  createdAt   DateTime     @default(now()) @map("created_at")
+  productTags ProductTag[]
+
+  @@map("tags")
+}
+
+model ProductTag {
+  productId Int     @map("product_id")
+  tagId     Int     @map("tag_id")
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([productId, tagId])
+  @@map("product_tags")
+}

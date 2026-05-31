@@ -1,33 +1,90 @@
 import api from "../api/axiosInstance";
 import { API_PATHS } from "../api/paths";
-import type { Product, ProductFormValues, ProductListResponse } from "../types";
-import { parseTagsInput } from "../utils/product.util";
+import {
+  createRequestConfig,
+  createSignalConfig,
+  type RequestOptions,
+} from "../api/requestConfig";
+import { productFormPayloadSchema } from "../schemas/productForm.schema";
+import type {
+  Product,
+  ProductCategory,
+  ProductFormValues,
+  ProductListResponse,
+  ProductPayload,
+  ProductSortField,
+  SortOrder,
+} from "../types";
 
-function mapFormToApiBody(form: ProductFormValues): Omit<Product, "id" | "createdAt" | "updatedAt"> {
-  return {
-    name: form.name.trim(),
-    description: form.desc.trim(),
-    price: Number(form.price),
-    category: form.category,
-    tags: parseTagsInput(form.tags),
-    imageUrl: form.imageUrl.trim(),
-  };
+export interface ProductListQuery {
+  page?: number;
+  limit?: number;
+  sort?: ProductSortField;
+  order?: SortOrder;
+  search?: string;
+  category?: ProductCategory;
+  minPrice?: number;
+  maxPrice?: number;
+}
+
+function mapFormToApiBody(form: ProductFormValues): ProductPayload {
+  return productFormPayloadSchema.parse(form);
 }
 
 export const productService = {
-  async getProducts(): Promise<ProductListResponse> {
-    const { data } = await api.get<ProductListResponse>(API_PATHS.PRODUCTS.LIST);
+  async getProducts(
+    params?: ProductListQuery,
+    options: RequestOptions = {},
+  ): Promise<ProductListResponse> {
+    const { data } = await api.get<ProductListResponse>(
+      API_PATHS.PRODUCTS.LIST,
+      createRequestConfig(params, options),
+    );
     return data;
   },
 
-  async getProductById(id: number | string): Promise<Product> {
-    const { data } = await api.get<Product>(API_PATHS.PRODUCTS.BY_ID(id));
+  async getProductById(
+    id: number | string,
+    options: RequestOptions = {},
+  ): Promise<Product> {
+    const { data } = await api.get<Product>(
+      API_PATHS.PRODUCTS.DETAIL(id),
+      createSignalConfig(options),
+    );
     return data;
   },
 
-  async createProduct(form: ProductFormValues): Promise<Product> {
+  async createProduct(
+    form: ProductFormValues,
+    options: RequestOptions = {},
+  ): Promise<Product> {
     const body = mapFormToApiBody(form);
-    const { data } = await api.post<Product>(API_PATHS.PRODUCTS.LIST, body);
+    const { data } = await api.post<Product>(
+      API_PATHS.PRODUCTS.CREATE,
+      body,
+      createSignalConfig(options),
+    );
     return data;
+  },
+
+  async updateProduct(
+    id: number | string,
+    form: ProductFormValues,
+    options: RequestOptions = {},
+  ): Promise<Product> {
+    const body = mapFormToApiBody(form);
+    const { data } = await api.put<Product>(
+      API_PATHS.PRODUCTS.UPDATE(id),
+      body,
+      createSignalConfig(options),
+    );
+    return data;
+  },
+
+  async deleteProduct(
+    id: number | string,
+    options: RequestOptions = {},
+  ): Promise<void> {
+    await api.delete(API_PATHS.PRODUCTS.DELETE(id), createSignalConfig(options));
   },
 };

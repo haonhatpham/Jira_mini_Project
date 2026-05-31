@@ -1,67 +1,127 @@
+import type {
+  LoginCredentials,
+  RegisterCredentials,
+  UserRole,
+} from "../schemas/auth.schema";
+import type {
+  ProductCategory,
+  ProductInput,
+  ProductSortField,
+  SortOrder,
+} from "../schemas/product.schema";
+
 export type AsyncStatus = "idle" | "loading" | "error" | "empty" | "data";
 
-export type ProductCategory = "Phone" | "Tablet" | "Accessory" | "Other";
+export type {
+  LoginCredentials,
+  RegisterCredentials,
+  UserRole,
+} from "../schemas/auth.schema";
 
-export interface Product {
+export type {
+  ProductCategory,
+  ProductInput as ProductPayload,
+  ProductSortField,
+  SortOrder,
+} from "../schemas/product.schema";
+
+export type LoginResponse = {
+  token: string;
+  expiresIn: string;
+  username: string;
+  role: UserRole;
+};
+
+export type AuthUser = {
   id: number;
-  name: string;
-  description: string;
-  price: number;
-  category: ProductCategory;
-  tags: string[];
-  imageUrl: string;
-  createdAt?: string;
-  updatedAt?: string;
-}
+  username: string;
+  email: string;
+  role: UserRole;
+  createdAt: string;
+  updatedAt: string;
+};
 
-export interface ProductListResponse {
+export type RegisterResponse = AuthUser;
+
+export type Product = ProductInput & {
+  id: number;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type ProductPagination = {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+};
+
+export type ProductListResponse = {
   data: Product[];
-  pagination: {
-    total: number;
-    page: number;
-    limit: number;
-    totalPages: number;
-    hasNextPage: boolean;
-    hasPrevPage: boolean;
-  };
+  pagination: ProductPagination;
   sort: {
-    sort: string;
-    order: "asc" | "desc";
+    sort: ProductSortField;
+    order: SortOrder;
   };
   filters: {
     search: string;
-    category: string;
+    category: ProductCategory | "";
     minPrice: number | null;
     maxPrice: number | null;
   };
-}
+};
 
-export interface ProductFormValues {
-  name: string;
-  desc: string;
-  price: string | number;
-  category: ProductCategory;
-  tags?: string;
-  imageUrl: string;
-}
-
-export interface LoginCredentials {
-  username: string;
-  password: string;
-}
-
-export interface AuthUser {
+export type CategoryOption = {
   id: number;
-  username: string;
-  password: string;
-  token: string;
-}
+  name: ProductCategory;
+};
 
-export interface LoginResponse {
-  token: string;
-  username: string;
-}
+export type TagOption = {
+  id: number;
+  name: string;
+};
+
+export type {
+  ProductFormFieldName,
+  ProductFormValues,
+} from "../schemas/productForm.schema";
 
 export interface ApiErrorBody {
+  status?: number;
+  code?: string;
   message?: string;
+  details?: unknown;
+  errors?: Record<string, string>;
+  stack?: string;
+}
+
+export type ApiResponse<T> = {
+  data: T;
+};
+
+export type PaginatedResponse<T> = {
+  data: T[];
+  pagination: {
+    page: number;
+    size: number;
+    total: number;
+    totalPages: number;
+  };
+};
+
+export type ApiErrorResponse = {
+  status: number;
+  message: string;
+  code: string;
+};
+
+export type CartProduct = Pick<
+  Product,
+  "id" | "name" | "price" | "category" | "imageUrl"
+>;
+
+export interface CartItem extends CartProduct {
+  quantity: number;
 }

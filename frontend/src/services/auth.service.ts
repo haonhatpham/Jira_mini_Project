@@ -1,6 +1,11 @@
 import api from "../api/axiosInstance";
 import { API_PATHS } from "../api/paths";
-import type { AuthUser, LoginCredentials, LoginResponse } from "../types";
+import type {
+  LoginCredentials,
+  LoginResponse,
+  RegisterCredentials,
+  RegisterResponse,
+} from "../types";
 import {
   clearStoredToken,
   getStoredToken,
@@ -12,28 +17,41 @@ export const authService = {
     return Boolean(getStoredToken());
   },
 
-  async login(credentials: LoginCredentials): Promise<LoginResponse> {
-    const { data } = await api.get<AuthUser[]>(API_PATHS.AUTH.USERS);
+  async register(credentials: RegisterCredentials): Promise<RegisterResponse> {
+    const { data } = await api.post<RegisterResponse>(
+      API_PATHS.AUTH.REGISTER,
+      credentials,
+    );
+    return data;
+  },
 
-    const user = data.find(
-      (item) =>
-        item.username === credentials.username &&
-        item.password === credentials.password,
+  async login(credentials: LoginCredentials): Promise<LoginResponse> {
+    const { data } = await api.post<LoginResponse>(
+      API_PATHS.AUTH.LOGIN,
+      credentials,
     );
 
-    if (!user) {
-      throw new Error("Invalid username or password");
-    }
-
-    setStoredToken(user.token);
-
+    setStoredToken(data.token);
     return {
-      token: user.token,
-      username: user.username,
+      token: data.token,
+      expiresIn: data.expiresIn,
+      username: data.username,
+      role: data.role,
     };
   },
 
-  logout(): void {
-    clearStoredToken();
+  async logout(): Promise<void> {
+    if (!getStoredToken()) {
+      clearStoredToken();
+      return;
+    }
+
+    try {
+      await api.post(API_PATHS.AUTH.LOGOUT);
+    } catch {
+      // Logout is stateless; clearing the local token is enough even if API is unavailable.
+    } finally {
+      clearStoredToken();
+    }
   },
 };

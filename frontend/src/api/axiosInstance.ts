@@ -1,43 +1,85 @@
-import axios, { type AxiosError } from "axios";
-import { API_CONFIG } from "../configs/api.config";
+import axios, {
+  AxiosHeaders,
+  type AxiosError,
+  type InternalAxiosRequestConfig,
+} from "axios";
+import { API_PATHS, BASE_URL } from "./paths";
+import {
+  createIdempotencyKey,
+  IDEMPOTENCY_HEADER,
+  shouldAttachIdempotencyKey,
+} from "./idempotency";
+import {
+  API_ERROR_CODES,
+  API_TIMEOUT_MS,
+  HTTP_STATUS,
+} from "../configs/api.config";
 import { clearStoredToken, getStoredToken } from "../utils/authToken.util";
 
-export const BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ||
-  (import.meta.env.DEV ? API_CONFIG.DEV_BASE_URL : "");
-
-let onUnauthorized: (() => void) | null = null;
-
-export function setUnauthorizedHandler(handler: (() => void) | null) {
-  onUnauthorized = handler;
-}
-
-export const api = axios.create({
+const axiosInstance = axios.create({
   baseURL: BASE_URL,
-  timeout: API_CONFIG.TIMEOUT_MS,
+  timeout: API_TIMEOUT_MS,
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
   },
 });
 
-api.interceptors.request.use((config) => {
-  const token = getStoredToken();
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
+axiosInstance.interceptors.request.use(
+  (config) => {
+    const headers = ensureAxiosHeaders(config);
+    const token = getStoredToken();
 
-api.interceptors.response.use(
+    if (token) {
+      headers.set("Authorization", `Bearer ${token}`);
+    }
+
+    if (
+      shouldAttachIdempotencyKey(config.method) &&
+      !headers.has(IDEMPOTENCY_HEADER)
+    ) {
+      headers.set(IDEMPOTENCY_HEADER, createIdempotencyKey());
+    }
+
+    return config;
+  },
+  (error) => Promise.reject(error),
+);
+
+axiosInstance.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
-    if (error.response?.status === API_CONFIG.UNAUTHORIZED_STATUS) {
+    const requestUrl = error.config?.url || "";
+    const isAuthRequest =
+      requestUrl.includes(API_PATHS.AUTH.LOGIN) ||
+      requestUrl.includes(API_PATHS.AUTH.LOGOUT) ||
+      requestUrl.includes(API_PATHS.AUTH.REGISTER);
+
+    if (error.response?.status === HTTP_STATUS.UNAUTHORIZED && !isAuthRequest) {
       clearStoredToken();
-      onUnauthorized?.();
+
+      const currentPath = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+      const loginUrl = new URL("/login", window.location.origin);
+      loginUrl.searchParams.set("from", currentPath);
+      loginUrl.searchParams.set("message", "session-expired");
+
+      window.location.assign(loginUrl.toString());
     }
+
+    if (error.response?.status === HTTP_STATUS.INTERNAL_SERVER_ERROR) {
+      console.error("Server error. Please try again later.");
+    } else if (error.code === API_ERROR_CODES.TIMEOUT) {
+      console.error("Request timeout. Please try again.");
+    }
+
     return Promise.reject(error);
   },
 );
 
-export default api;
+export default axiosInstance;
+
+function ensureAxiosHeaders(config: InternalAxiosRequestConfig): AxiosHeaders {
+  const headers = AxiosHeaders.from(config.headers);
+  config.headers = headers;
+  return headers;
+}

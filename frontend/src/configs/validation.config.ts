@@ -1,0 +1,13 @@
+export const REQUIRED_TEXT_LENGTH = 1;
+
+export const AUTH_VALIDATION = {
+  PASSWORD_MIN_LENGTH: 6,
+  USERNAME_MIN_LENGTH: 3,
+} as const;
+
+export const PRODUCT_VALIDATION = {
+  DESCRIPTION_MIN_LENGTH: 10,
+  ID_MIN: 1,
+  MIN_PRICE: 0,
+  NAME_MIN_LENGTH: 2,
+} as const;

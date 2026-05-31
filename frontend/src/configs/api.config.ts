@@ -1,7 +1,11 @@
-export const API_CONFIG = {
-  DEV_BASE_URL: "http://localhost:3001",
-  TIMEOUT_MS: 10000,
-  UNAUTHORIZED_STATUS: 401,
-  NOT_FOUND_STATUS: 404,
-  SERVER_ERROR_STATUS: 500,
-};
+export const API_TIMEOUT_MS = 10000;
+
+export const HTTP_STATUS = {
+  UNAUTHORIZED: 401,
+  INTERNAL_SERVER_ERROR: 500,
+} as const;
+
+export const API_ERROR_CODES = {
+  CANCELED: "ERR_CANCELED",
+  TIMEOUT: "ECONNABORTED",
+} as const;

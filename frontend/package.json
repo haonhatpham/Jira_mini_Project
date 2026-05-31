@@ -5,17 +5,23 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "tsc --noEmit && vite build",
+    "typecheck": "tsc --noEmit",
     "lint": "eslint .",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check",
     "preview": "vite preview",
     "server": "npm --prefix ../backend run dev"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.4.0",
     "axios": "^1.16.1",
+    "lucide-react": "^1.16.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "react-hook-form": "^7.75.0",
     "react-router-dom": "^7.15.1",
+    "zod": "^4.4.3",
     "zustand": "^5.0.13"
   },
   "devDependencies": {
@@ -31,7 +37,7 @@
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.6.0",
     "jsdom": "^29.1.1",
-    "json-server": "^1.0.0-beta.15",
+    "prettier": "^3.8.3",
     "typescript": "^6.0.3",
     "vite": "^8.0.12",
     "vitest": "^4.1.6"

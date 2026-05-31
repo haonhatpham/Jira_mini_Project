@@ -19,9 +19,9 @@
 }
 
 .form-success {
-  background: #e0f2fe;
-  border: 1px solid #0284c7;
-  color: #0369a1;
+  background: #f8fafc;
+  border: 1px solid #111827;
+  color: #111827;
   padding: 12px 16px;
   border-radius: 6px;
   margin-bottom: 16px;
@@ -68,7 +68,7 @@
 .form-field input:focus,
 .form-field textarea:focus,
 .form-field select:focus {
-  outline: 2px solid #0284c7;
+  outline: 2px solid #111827;
   outline-offset: 1px;
 }
 
@@ -91,10 +91,100 @@
   margin-top: 4px;
 }
 
+.tag-dropdown {
+  position: relative;
+}
+
+.tag-dropdown summary {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background: #ffffff;
+  color: #111827;
+  cursor: pointer;
+  box-sizing: border-box;
+  list-style: none;
+}
+
+.tag-dropdown summary::-webkit-details-marker {
+  display: none;
+}
+
+.tag-dropdown summary::after {
+  content: "v";
+  float: right;
+  color: #6b7280;
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.tag-dropdown[open] summary::after {
+  content: "^";
+}
+
+.tag-options {
+  max-height: 180px;
+  overflow-y: auto;
+  margin-top: 6px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background: #ffffff;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+  padding: 6px;
+}
+
+.form-field .tag-checkbox {
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  align-items: center;
+  column-gap: 12px;
+  border-radius: 4px;
+  padding: 9px 10px;
+  color: #374151;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 2px;
+  user-select: none;
+}
+
+.form-field .tag-checkbox:hover {
+  background: #f3f6fb;
+}
+
+.form-field .tag-checkbox:has(input:checked) {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.form-field .tag-checkbox input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  padding: 0;
+  margin: 0;
+  border-radius: 3px;
+  box-sizing: border-box;
+  cursor: pointer;
+  accent-color: #111827;
+}
+
+.form-field .tag-checkbox span {
+  display: block;
+  line-height: 1.2;
+  padding-left: 2px;
+}
+
+.empty-options {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
 .form-submit-btn {
   width: 100%;
   padding: 12px;
-  background: #0284c7;
+  background: #111827;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -104,11 +194,11 @@
 }
 
 .form-submit-btn:hover:not(:disabled) {
-  background: #0369a1;
+  background: #020617;
 }
 
 .form-submit-btn:disabled {
-  background: #94a3b8;
+  background: #9ca3af;
   cursor: not-allowed;
 }
 
