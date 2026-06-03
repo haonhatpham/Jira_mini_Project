@@ -7,6 +7,7 @@ import {
   selectLogout,
   useAuthStore,
 } from "../../../stores/authStore";
+import { selectShowToast, useToastStore } from "../../../stores/toastStore";
 import { APP_ROUTES } from "../../../configs/routes.config";
 import { UI_COUNTS } from "../../../configs/ui.config";
 import "./Header.css";
@@ -16,15 +17,18 @@ export default function Header() {
   const isLoggedIn = useAuthStore(selectIsLoggedIn);
   const isAdmin = useAuthStore(selectIsAdmin);
   const logout = useAuthStore(selectLogout);
+  const showToast = useToastStore(selectShowToast);
   const location = useLocation();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     await logout();
-    navigate(APP_ROUTES.LOGIN, {
-      replace: true,
-      state: { message: "You have been logged out." },
+    showToast({
+      title: "Signed out",
+      description: "You have been logged out.",
+      variant: "info",
     });
+    navigate(APP_ROUTES.LOGIN, { replace: true });
   };
 
   return (

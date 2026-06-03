@@ -8,7 +8,7 @@ Luồng xử lý request:
 
 ```txt
 Client request
-  -> server.ts
+  -> src/server.ts
   -> routes/
   -> middleware/ nếu route cần validate request, xác thực hoặc phân quyền
   -> controllers/
@@ -21,7 +21,7 @@ Client request
 
 Vai trò từng tầng:
 
-- `server.ts`: khởi tạo Express app, cấu hình middleware chung, Swagger/OpenAPI và mount route.
+- `src/server.ts`: khởi tạo HTTP server; `src/app.ts` cấu hình Express, Swagger/OpenAPI và mount route.
 - `routes/`: khai báo URL, HTTP method và middleware cần dùng cho từng endpoint.
 - `middleware/`: xử lý logic cắt ngang như validate request, log request, JWT authentication, role authorization, 404 và error response.
 - `controllers/`: nhận `req`, gọi service, set HTTP status và trả JSON.
@@ -69,13 +69,13 @@ http://localhost:3001/api/openapi.json
 ## Scripts
 
 ```bash
-npm run dev              # Chạy server.ts bằng tsx watch
+npm run dev              # Chạy src/server.ts bằng tsx watch
 npm run typecheck        # Kiểm tra TypeScript không emit file
 npm run build            # Biên dịch TypeScript vào dist/
 npm run prisma:generate  # Generate Prisma Client
 npm run prisma:migrate   # Chạy Prisma migration ở môi trường dev
 npm run prisma:seed      # Seed dữ liệu mẫu bằng TypeScript
-npm start                # Chạy dist/server.js
+npm start                # Chạy dist/src/server.js
 ```
 
 ## Biến Môi Trường
@@ -120,35 +120,41 @@ Authorization: Bearer <jwt>
 
 ```txt
 backend/
-  config/
-  constants/
-  controllers/
   dist/
-  docs/
-  exceptions/
-  middleware/
-  models/
-  pagination/
-  prisma/
+  generated/
   node_modules/
-  routes/
-  schemas/
-  services/
-  types/
-  utils/
+  prisma/
+  src/
+    app.ts
+    server.ts
+    cache/
+    config/
+    constants/
+    controllers/
+    docs/
+    exceptions/
+    idempotency/
+    logger/
+    middleware/
+    models/
+    pagination/
+    routes/
+    schemas/
+    services/
+    types/
+    utils/
   .env
   .env.example
   package-lock.json
   package.json
   README.md
   prisma.config.ts
-  server.ts
   tsconfig.json
 ```
 
-## File Cấp Root
+## File Source Chính
 
-### `server.ts`
+### `src/server.ts`
 
 File entry point của backend.
 
@@ -183,10 +189,10 @@ Khai báo metadata, script, dependency và devDependency của backend.
 Điểm quan trọng:
 
 - `"type": "module"`: backend dùng ES Modules.
-- `"main": "dist/server.js"`: file JavaScript chạy sau khi build.
+- `"main": "dist/src/server.js"`: file JavaScript chạy sau khi build.
 - `scripts.dev`: chạy server bằng `tsx watch`.
 - `scripts.build`: biên dịch TypeScript bằng `tsc`.
-- `scripts.start`: chạy app đã build ở `dist/server.js`.
+- `scripts.start`: chạy app đã build ở `dist/src/server.js`.
 - `scripts.typecheck`: kiểm tra TypeScript không emit file.
 - `express`, `@prisma/client`, `@prisma/adapter-pg`, `dotenv`, `cors`: nền tảng HTTP, database và config.
 - `jsonwebtoken`, `bcryptjs`: JWT và password hashing.
@@ -215,7 +221,7 @@ Cấu hình TypeScript compiler cho backend.
 - `noImplicitAny`, `noImplicitReturns`, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`: tăng độ chặt của type safety.
 - `outDir: "dist"`: output build nằm trong `dist/`.
 - `rootDir: "."`: source root là thư mục backend.
-- `include`: include toàn bộ `.ts` và `.d.ts`.
+- `include`: include source trong `src/**/*.ts` và `src/**/*.d.ts`.
 - `exclude`: bỏ qua `dist` và `node_modules`.
 
 ### `.env`
@@ -320,7 +326,7 @@ Route xác thực.
 Route category.
 
 - `GET /` gọi `categoryController.getCategories`.
-- Khi mount trong `server.ts`, endpoint đầy đủ là `GET /api/categories`.
+- Khi mount trong `src/app.ts`, endpoint đầy đủ là `GET /api/categories`.
 
 ### `routes/productRoutes.ts`
 
@@ -342,14 +348,14 @@ Route product.
 Route tag.
 
 - `GET /` gọi `tagController.getTags`.
-- Khi mount trong `server.ts`, endpoint đầy đủ là `GET /api/tags`.
+- Khi mount trong `src/app.ts`, endpoint đầy đủ là `GET /api/tags`.
 
 ### `routes/userRoutes.ts`
 
 Route user.
 
 - `GET /` dùng `authenticateToken`, `requireRole("admin")`, rồi gọi `userController.getUsers`.
-- Khi mount trong `server.ts`, endpoint đầy đủ là `GET /api/users`.
+- Khi mount trong `src/app.ts`, endpoint đầy đủ là `GET /api/users`.
 - Chỉ admin mới lấy được danh sách user.
 
 ## Thư Mục `controllers/`
@@ -865,7 +871,7 @@ dist/
 
 Ý nghĩa các file trong `dist/`:
 
-- `dist/server.js`: bản build của `server.ts`, được chạy bởi `npm start`.
+- `dist/src/server.js`: bản build của `src/server.ts`, được chạy bởi `npm start`.
 - `dist/config/auth.js`: bản build của `config/auth.ts`.
 - `dist/config/prisma.js`: bản build của `config/prisma.ts`.
 - `dist/constants/httpStatus.js`: bản build của `constants/httpStatus.ts`.

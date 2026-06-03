@@ -66,6 +66,15 @@ export const PORT = getIntegerEnv("PORT", 3001, {
   min: 1,
 });
 export const DATABASE_URL = getEnv("DATABASE_URL");
+export const DATABASE_POOL_MAX = getIntegerEnv("DATABASE_POOL_MAX", 10, {
+  min: 1,
+});
+export const DATABASE_POOL_IDLE_TIMEOUT_MS = getIntegerEnv("DATABASE_POOL_IDLE_TIMEOUT_MS", 30_000, {
+  min: 0,
+});
+export const DATABASE_POOL_CONNECTION_TIMEOUT_MS = getIntegerEnv("DATABASE_POOL_CONNECTION_TIMEOUT_MS", 10_000, {
+  min: 0,
+});
 export const JWT_SECRET = getEnv("JWT_SECRET");
 export const JWT_EXPIRES_IN = getEnv("JWT_EXPIRES_IN", "1h");
 export const PASSWORD_SALT_ROUNDS = getIntegerEnv("PASSWORD_SALT_ROUNDS", 10, {
@@ -73,6 +82,9 @@ export const PASSWORD_SALT_ROUNDS = getIntegerEnv("PASSWORD_SALT_ROUNDS", 10, {
 });
 
 export const env = {
+  DATABASE_POOL_CONNECTION_TIMEOUT_MS,
+  DATABASE_POOL_IDLE_TIMEOUT_MS,
+  DATABASE_POOL_MAX,
   DATABASE_URL,
   JWT_EXPIRES_IN,
   JWT_SECRET,

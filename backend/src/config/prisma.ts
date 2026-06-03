@@ -4,14 +4,22 @@
 import "dotenv/config";
 
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "../generated/prisma/client.js";
+import { Pool } from "pg";
+import { PrismaClient } from "../../generated/prisma/client.js";
 import { ServiceUnavailableException } from "../exceptions/index.js";
-import { DATABASE_URL } from "./env.js";
+import { env } from "./env.js";
 
-const adapter = new PrismaPg({
-  connectionString: DATABASE_URL,
+const pool = new Pool({
+  connectionString: env.DATABASE_URL,
+  max: env.DATABASE_POOL_MAX,
+  idleTimeoutMillis: env.DATABASE_POOL_IDLE_TIMEOUT_MS,
+  connectionTimeoutMillis: env.DATABASE_POOL_CONNECTION_TIMEOUT_MS,
 });
 
+const adapter = new PrismaPg(pool);
+/**
+ * Shared Prisma Client instance.
+ */
 export const prisma = new PrismaClient({
   adapter,
 });

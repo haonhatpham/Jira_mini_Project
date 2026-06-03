@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ErrorBoundary from "./components/common/ErrorBoundary/ErrorBoundary";
+import ToastViewport from "./components/common/Toast/ToastViewport";
 import Footer from "./components/layout/Footer/Footer";
 import Header from "./components/layout/Header/Header";
 import ProtectedRoute from "./components/routing/ProtectedRoute/ProtectedRoute";
@@ -65,6 +66,7 @@ function AppContent() {
       </Routes>
 
       {withBoundary(<Footer />)}
+      <ToastViewport />
     </>
   );
 }

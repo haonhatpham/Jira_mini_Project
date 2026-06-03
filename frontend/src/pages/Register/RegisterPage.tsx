@@ -11,6 +11,7 @@ import {
   selectResetAuthError,
   useAuthStore,
 } from "../../stores/authStore";
+import { selectShowToast, useToastStore } from "../../stores/toastStore";
 import "./RegisterPage.css";
 
 type PasswordStrengthLevel = "empty" | "weak" | "medium" | "strong";
@@ -78,6 +79,7 @@ export default function RegisterPage() {
   const status = useAuthStore(selectAuthStatus);
   const error = useAuthStore(selectAuthError);
   const isLoggedIn = useAuthStore(selectIsLoggedIn);
+  const showToast = useToastStore(selectShowToast);
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -116,7 +118,12 @@ export default function RegisterPage() {
     }
 
     try {
-      await register(result.data);
+      const registerResult = await register(result.data);
+      showToast({
+        title: "Account created",
+        description: `Welcome, ${registerResult.username}.`,
+        variant: "success",
+      });
       navigate(APP_ROUTES.HOME, { replace: true });
     } catch {
       // The auth store owns API errors so DevTools can trace the state change.

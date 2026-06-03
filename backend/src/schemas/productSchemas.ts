@@ -4,8 +4,14 @@
 import { z } from "zod";
 import type { Pageable } from "../pagination/pageable.js";
 
+const TAG_MAX_LENGTH = 50;
+
 export const ProductCategorySchema = z.string().trim().min(1, "Category is required.");
 export const SortOrderSchema = z.enum(["asc", "desc"]);
+const ProductTagSchema = z.string().trim().max(
+  TAG_MAX_LENGTH,
+  `tag must be ${TAG_MAX_LENGTH} characters or fewer.`,
+);
 
 /**
  * Schema body client gui len khi tao/cap nhat product.
@@ -18,7 +24,7 @@ export const ProductRequestSchema = z.strictObject({
     z.number().finite().min(0),
   ),
   category: ProductCategorySchema,
-  tags: z.array(z.string()).optional().default([]).transform((tags) => (
+  tags: z.array(ProductTagSchema).optional().default([]).transform((tags) => (
     tags.map((tag) => tag.trim()).filter(Boolean)
   )),
   imageUrl: z.preprocess(

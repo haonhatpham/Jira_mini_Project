@@ -1,7 +1,7 @@
 /**
  * File model user: truy van bang users bang Prisma va map sang UserRecord.
  */
-import type { User } from "../generated/prisma/client.js";
+import type { User } from "../../generated/prisma/client.js";
 import { prisma, withPrismaErrorHandling } from "../config/prisma.js";
 import { isUserRole } from "../schemas/authSchemas.js";
 import type { CreateUserInput, UserRecord } from "../types/user.js";

@@ -45,7 +45,7 @@ export default function ProductDetailView({
       </Link>
 
       <div className="product-detail-layout">
-        <ProductDetailGallery imageUrl={product.imageUrl} name={product.name} />
+        <ProductDetailGallery product={product} />
 
         <div className="product-info-panel">
           <p className="product-detail-id">Ma san pham: {productCode}</p>

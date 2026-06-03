@@ -10,14 +10,7 @@ export default function ProductList({ products }: ProductListProps) {
   return (
     <div id="products-container">
       {products.map((product) => (
-        <ProductCard
-          key={product.id}
-          id={product.id}
-          name={product.name}
-          price={product.price}
-          category={product.category}
-          imageUrl={product.imageUrl}
-        />
+        <ProductCard key={product.id} product={product} />
       ))}
     </div>
   );

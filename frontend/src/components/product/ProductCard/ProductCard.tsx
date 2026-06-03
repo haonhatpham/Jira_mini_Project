@@ -2,22 +2,31 @@ import { ShoppingCart, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import { APP_ROUTES } from "../../../configs/routes.config";
 import { selectAddToCart, useCartStore } from "../../../stores/cartStore";
+import { selectShowToast, useToastStore } from "../../../stores/toastStore";
 import type { CartProduct } from "../../../types";
 import { formatVndPrice } from "../../../utils/format.util";
 import { getProductCardMetrics } from "../../../utils/productCard.util";
 import "./ProductCard.css";
 
-export default function ProductCard({
-  id,
-  name,
-  price,
-  category,
-  imageUrl,
-}: CartProduct) {
+interface ProductCardProps {
+  product: CartProduct;
+}
+
+export default function ProductCard({ product }: ProductCardProps) {
   const addToCart = useCartStore(selectAddToCart);
+  const showToast = useToastStore(selectShowToast);
+  const { id, name, price, category, imageUrl } = product;
   const { discount, oldPrice, rating, reviews, stockCount } =
     getProductCardMetrics(id, price);
   const detailPath = APP_ROUTES.productDetail(id);
+  const handleAddToCart = () => {
+    addToCart(product);
+    showToast({
+      title: "Added to cart",
+      description: name,
+      variant: "success",
+    });
+  };
 
   return (
     <article className="card">
@@ -53,7 +62,7 @@ export default function ProductCard({
         <button
           type="button"
           className="add-to-cart-btn"
-          onClick={() => addToCart({ id, name, price, category, imageUrl })}
+          onClick={handleAddToCart}
         >
           <ShoppingCart aria-hidden="true" className="card-icon cart-only" />
           <span>Add to cart</span>

@@ -16,6 +16,7 @@ import {
   selectResetAuthError,
   useAuthStore,
 } from "../../stores/authStore";
+import { selectShowToast, useToastStore } from "../../stores/toastStore";
 import "./LoginPage.css";
 
 interface LoginLocationState {
@@ -35,6 +36,7 @@ export default function LoginPage() {
   const status = useAuthStore(selectAuthStatus);
   const error = useAuthStore(selectAuthError);
   const isLoggedIn = useAuthStore(selectIsLoggedIn);
+  const showToast = useToastStore(selectShowToast);
   const navigate = useNavigate();
   const location = useLocation();
   const locationState = isLoginLocationState(location.state)
@@ -84,7 +86,12 @@ export default function LoginPage() {
     }
 
     try {
-      await login(result.data);
+      const loginResult = await login(result.data);
+      showToast({
+        title: "Signed in",
+        description: `Welcome back, ${loginResult.username}.`,
+        variant: "success",
+      });
       navigate(from, { replace: true });
     } catch {
       // The auth store owns login errors so DevTools can trace the state change.

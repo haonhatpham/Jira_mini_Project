@@ -77,6 +77,27 @@
   border-color: #d1d5db;
 }
 
+.form-field select,
+.tag-dropdown summary {
+  min-height: 42px;
+  padding-right: 36px;
+  background-image:
+    linear-gradient(45deg, transparent 50%, #6b7280 50%),
+    linear-gradient(135deg, #6b7280 50%, transparent 50%);
+  background-position:
+    calc(100% - 17px) 50%,
+    calc(100% - 12px) 50%;
+  background-size:
+    5px 5px,
+    5px 5px;
+  background-repeat: no-repeat;
+}
+
+.form-field select {
+  appearance: none;
+  cursor: pointer;
+}
+
 .field-error {
   display: block;
   color: #dc2626;
@@ -97,13 +118,16 @@
 
 .tag-dropdown summary {
   width: 100%;
-  padding: 8px 10px;
+  min-height: 42px;
+  padding: 7px 36px 7px 10px;
   border: 1px solid #d1d5db;
   border-radius: 4px;
-  background: #ffffff;
+  background-color: #ffffff;
   color: #111827;
   cursor: pointer;
   box-sizing: border-box;
+  display: flex;
+  align-items: center;
   list-style: none;
 }
 
@@ -111,16 +135,33 @@
   display: none;
 }
 
-.tag-dropdown summary::after {
-  content: "v";
-  float: right;
-  color: #6b7280;
-  font-size: 0.85rem;
-  font-weight: 800;
+.tag-dropdown[open] summary {
+  background-image:
+    linear-gradient(45deg, #6b7280 50%, transparent 50%),
+    linear-gradient(135deg, transparent 50%, #6b7280 50%);
 }
 
-.tag-dropdown[open] summary::after {
-  content: "^";
+.tag-summary-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag-summary-placeholder {
+  color: #111827;
+}
+
+.tag-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 10px;
+  border: 1px solid #dbeafe;
+  border-radius: 999px;
+  background: #eff6ff;
+  color: #0f172a;
+  font-size: 0.86rem;
+  font-weight: 800;
 }
 
 .tag-options {

@@ -9,11 +9,12 @@ interface ProductOptionsData {
 
 interface UseProductOptionsResult extends ProductOptionsData {
   error: string | null;
+  refetch: () => Promise<ProductOptionsData | undefined>;
   status: AsyncStatus;
 }
 
 export function useProductOptions(): UseProductOptionsResult {
-  const { data, error, status } = useFetch<ProductOptionsData>(
+  const { data, error, refetch, status } = useFetch<ProductOptionsData>(
     ["product-options"],
     async (signal) => {
       const requestOptions = { signal };
@@ -29,6 +30,7 @@ export function useProductOptions(): UseProductOptionsResult {
   return {
     categories: data?.categories ?? [],
     error,
+    refetch,
     status,
     tags: data?.tags ?? [],
   };

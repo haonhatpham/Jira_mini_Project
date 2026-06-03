@@ -10,9 +10,15 @@ export const API_PATHS = {
   },
   CATEGORIES: {
     LIST: "/api/categories",
+    CREATE: "/api/categories",
+    UPDATE: (id: number | string) => `/api/categories/${id}`,
+    DELETE: (id: number | string) => `/api/categories/${id}`,
   },
   TAGS: {
     LIST: "/api/tags",
+    CREATE: "/api/tags",
+    UPDATE: (id: number | string) => `/api/tags/${id}`,
+    DELETE: (id: number | string) => `/api/tags/${id}`,
   },
   AUTH: {
     LOGIN: "/api/auth/login",

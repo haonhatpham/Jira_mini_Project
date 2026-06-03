@@ -1,7 +1,7 @@
 /**
  * File model product: truy van products, categories, tags va product_tags bang Prisma.
  */
-import { Prisma } from "../generated/prisma/client.js";
+import { Prisma } from "../../generated/prisma/client.js";
 import { prisma, withPrismaErrorHandling } from "../config/prisma.js";
 import { BadRequestException } from "../exceptions/index.js";
 import type {

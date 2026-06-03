@@ -6,6 +6,7 @@ import ProductForm from "../../components/product/ProductForm/ProductForm";
 import { APP_ROUTES } from "../../configs/routes.config";
 import { useProductDetail } from "../../hooks/useProductDetail";
 import { productService } from "../../services/product.service";
+import { selectShowToast, useToastStore } from "../../stores/toastStore";
 import type { Product, ProductFormValues } from "../../types";
 import "./EditProductPage.css";
 
@@ -25,6 +26,7 @@ export default function EditProductPage() {
   const navigate = useNavigate();
   const { status, product, error, retry } = useProductDetail(id);
   const idempotencyKeyRef = useRef(createIdempotencyKey());
+  const showToast = useToastStore(selectShowToast);
 
   const initialValues = useMemo(
     () => (product ? mapProductToFormValues(product) : undefined),
@@ -40,6 +42,11 @@ export default function EditProductPage() {
       idempotencyKey: idempotencyKeyRef.current,
     });
     idempotencyKeyRef.current = createIdempotencyKey();
+    showToast({
+      title: "Product updated",
+      description: updatedProduct.name,
+      variant: "success",
+    });
     navigate(APP_ROUTES.productDetail(updatedProduct.id), { replace: true });
   };
 

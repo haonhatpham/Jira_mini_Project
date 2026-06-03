@@ -41,9 +41,11 @@ export default function ProductForm({
   } = useProductOptions();
 
   const {
+    control,
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors, isSubmitting, touchedFields, isSubmitted },
   } = useForm<ProductFormValues>({
     defaultValues: initialValues,
@@ -99,7 +101,9 @@ export default function ProductForm({
       <fieldset className="form-fields" disabled={disableForm}>
         <ProductFormFields
           categories={categories}
+          control={control}
           register={register}
+          setValue={setValue}
           showFieldError={showFieldError}
           tags={tags}
         />
@@ -127,11 +131,29 @@ export default function ProductForm({
 function getFormErrorEntries(
   errors: FieldErrors<ProductFormValues>,
 ): FormErrorEntry[] {
-  return Object.entries(errors).flatMap(([key, error]) => {
-    if (!error || typeof error.message !== "string") {
-      return [];
-    }
+  const entries: FormErrorEntry[] = [];
+  collectErrorEntries(errors, entries);
+  return entries;
+}
 
-    return [[key, error.message]];
-  });
+function collectErrorEntries(
+  value: unknown,
+  entries: FormErrorEntry[],
+  path = "form",
+): void {
+  if (!value || typeof value !== "object") {
+    return;
+  }
+
+  if (
+    "message" in value &&
+    typeof (value as { message?: unknown }).message === "string"
+  ) {
+    entries.push([path, (value as { message: string }).message]);
+    return;
+  }
+
+  for (const [key, child] of Object.entries(value)) {
+    collectErrorEntries(child, entries, `${path}.${key}`);
+  }
 }

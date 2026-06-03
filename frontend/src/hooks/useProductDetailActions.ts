@@ -6,6 +6,7 @@ import { APP_ROUTES } from "../configs/routes.config";
 import { useAsyncAction } from "./useAsyncAction";
 import { productService } from "../services/product.service";
 import { selectAddToCart, useCartStore } from "../stores/cartStore";
+import { selectShowToast, useToastStore } from "../stores/toastStore";
 import type { Product } from "../types";
 
 interface ProductDetailActions {
@@ -26,6 +27,7 @@ export function useProductDetailActions(
 ): ProductDetailActions {
   const navigate = useNavigate();
   const addToCart = useCartStore(selectAddToCart);
+  const showToast = useToastStore(selectShowToast);
   const [quantity, setQuantity] = useState<number>(CART_QUANTITY.DEFAULT);
   const [isOptimisticallyDeleted, setIsOptimisticallyDeleted] = useState(false);
   const deleteIdempotencyKeyRef = useRef(createIdempotencyKey());
@@ -39,6 +41,11 @@ export function useProductDetailActions(
   const addSelectedQuantity = () => {
     if (product) {
       addToCart(product, quantity);
+      showToast({
+        title: "Added to cart",
+        description: `${quantity} x ${product.name}`,
+        variant: "success",
+      });
     }
   };
 
@@ -58,9 +65,19 @@ export function useProductDetailActions(
     try {
       await deleteAction.execute(product.id, deleteIdempotencyKeyRef.current);
       deleteIdempotencyKeyRef.current = createIdempotencyKey();
+      showToast({
+        title: "Product deleted",
+        description: product.name,
+        variant: "success",
+      });
       navigate(APP_ROUTES.HOME, { replace: true });
     } catch {
       setIsOptimisticallyDeleted(false);
+      showToast({
+        title: "Delete failed",
+        description: product.name,
+        variant: "error",
+      });
     }
   };
 

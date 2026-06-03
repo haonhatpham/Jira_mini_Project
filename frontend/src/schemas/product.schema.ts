@@ -4,12 +4,6 @@ import {
   REQUIRED_TEXT_LENGTH,
 } from "../configs/validation.config";
 
-export const PRODUCT_CATEGORIES = [
-  "Phone",
-  "Tablet",
-  "Accessory",
-  "Other",
-] as const;
 export const PRODUCT_SORT_FIELDS = [
   "id",
   "name",
@@ -19,7 +13,10 @@ export const PRODUCT_SORT_FIELDS = [
   "updatedAt",
 ] as const;
 
-export const productCategorySchema = z.enum(PRODUCT_CATEGORIES);
+export const productCategorySchema = z
+  .string()
+  .trim()
+  .min(REQUIRED_TEXT_LENGTH, "Category is required.");
 export const productSortFieldSchema = z.enum(PRODUCT_SORT_FIELDS);
 export const sortOrderSchema = z.enum(["asc", "desc"]);
 
@@ -49,7 +46,12 @@ export const productInputSchema = z.strictObject({
   ),
   category: productCategorySchema,
   tags: z
-    .array(z.string())
+    .array(
+      z
+        .string()
+        .trim()
+        .max(PRODUCT_VALIDATION.TAG_MAX_LENGTH),
+    )
     .optional()
     .default([])
     .transform((tags) => tags.map((tag) => tag.trim()).filter(Boolean)),

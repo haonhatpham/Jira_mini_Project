@@ -18,8 +18,7 @@ interface UseProductListResult {
   pagination: ProductPagination | null;
   error: string | null;
   retry: () => void;
-  goToPreviousPage: () => void;
-  goToNextPage: () => void;
+  goToPage: (page: number) => void;
 }
 
 type ProductListOptions = Omit<ProductListQuery, "page" | "limit"> & {
@@ -85,24 +84,19 @@ export function useProductList(
     void refetch();
   }, [refetch]);
 
-  const goToPreviousPage = useCallback(() => {
-    setPage((currentPage) =>
-      Math.max(
-        PRODUCT_PAGINATION.INITIAL_PAGE,
-        currentPage - PRODUCT_PAGINATION.PAGE_STEP,
-      ),
-    );
-  }, []);
+  const goToPage = useCallback(
+    (targetPage: number) => {
+      setPage(() => {
+        const lastPage = pagination?.totalPages ?? targetPage;
 
-  const goToNextPage = useCallback(() => {
-    setPage((currentPage) => {
-      if (pagination && currentPage >= pagination.totalPages) {
-        return currentPage;
-      }
-
-      return currentPage + PRODUCT_PAGINATION.PAGE_STEP;
-    });
-  }, [pagination]);
+        return Math.min(
+          Math.max(PRODUCT_PAGINATION.INITIAL_PAGE, targetPage),
+          lastPage,
+        );
+      });
+    },
+    [pagination],
+  );
 
   return {
     status,
@@ -110,8 +104,7 @@ export function useProductList(
     pagination,
     error,
     retry,
-    goToPreviousPage,
-    goToNextPage,
+    goToPage,
   };
 }
 

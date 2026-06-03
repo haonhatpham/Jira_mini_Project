@@ -1,6 +1,6 @@
 import AsyncState from "../../components/common/AsyncState/AsyncState";
+import Pagination from "../../components/common/Pagination/Pagination";
 import ProductList from "../../components/product/ProductList/ProductList";
-import { PRODUCT_PAGINATION } from "../../configs/pagination.config";
 import { useProductList } from "../../hooks/useProductList";
 
 export default function HomePage() {
@@ -10,9 +10,17 @@ export default function HomePage() {
     pagination,
     error,
     retry,
-    goToPreviousPage,
-    goToNextPage,
+    goToPage,
   } = useProductList();
+
+  const handlePageChange = (page: number) => {
+    goToPage(page);
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "smooth",
+    });
+  };
 
   return (
     <section id="products">
@@ -25,40 +33,14 @@ export default function HomePage() {
       >
         <ProductList products={products} />
       </AsyncState>
-      {status === "data" &&
-        pagination &&
-        pagination.totalPages > PRODUCT_PAGINATION.INITIAL_PAGE && (
-          <div className="pagination-controls" aria-label="Product pagination">
-            <button
-              type="button"
-              onClick={goToPreviousPage}
-              disabled={!pagination.hasPrevPage}
-              aria-label="Previous page"
-            >
-              Prev
-            </button>
-            <button type="button" className="active-page" aria-current="page">
-              {pagination.page}
-            </button>
-            {pagination.totalPages > pagination.page && (
-              <button
-                type="button"
-                onClick={goToNextPage}
-                aria-label={`Go to page ${pagination.page + PRODUCT_PAGINATION.PAGE_STEP}`}
-              >
-                {pagination.page + PRODUCT_PAGINATION.PAGE_STEP}
-              </button>
-            )}
-            <button
-              type="button"
-              onClick={goToNextPage}
-              disabled={!pagination.hasNextPage}
-              aria-label="Next page"
-            >
-              Next
-            </button>
-          </div>
-        )}
+      {status === "data" && pagination && (
+        <Pagination
+          ariaLabel="Product pagination"
+          onChange={handlePageChange}
+          page={pagination.page}
+          totalPages={pagination.totalPages}
+        />
+      )}
     </section>
   );
 }

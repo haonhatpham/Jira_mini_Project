@@ -5,6 +5,14 @@ import {
 } from "../configs/validation.config";
 import { productCategorySchema, productInputSchema } from "./product.schema";
 
+const tagNameSchema = z
+  .string()
+  .trim()
+  .max(
+    PRODUCT_VALIDATION.TAG_MAX_LENGTH,
+    `Tag must be ${PRODUCT_VALIDATION.TAG_MAX_LENGTH} characters or fewer`,
+  );
+
 export const productFormSchema = z.object({
   name: z
     .string()
@@ -36,8 +44,8 @@ export const productFormSchema = z.object({
     .union([productCategorySchema, z.literal("")])
     .refine((value) => value !== "", "Please select a category"),
   tags: z
-    .array(z.string())
-    .transform((tags) => tags.map((tag) => tag.trim()).filter(Boolean)),
+    .array(tagNameSchema)
+    .transform((tags) => normalizeTags(tags)),
   imageUrl: z
     .string()
     .trim()
@@ -68,4 +76,10 @@ function isUrl(value: string): boolean {
   } catch {
     return false;
   }
+}
+
+function normalizeTags(tags: string[]): string[] {
+  return Array.from(
+    new Set(tags.map((tag) => tag.trim()).filter(Boolean)),
+  );
 }

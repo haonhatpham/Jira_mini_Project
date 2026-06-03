@@ -1,23 +1,25 @@
+import type { Product } from "../../../types";
+
 interface ProductDetailGalleryProps {
-  imageUrl: string;
-  name: string;
+  product: Pick<Product, "imageUrl" | "name">;
 }
 
 export default function ProductDetailGallery({
-  imageUrl,
-  name,
+  product,
 }: ProductDetailGalleryProps) {
+  const { imageUrl, name } = product;
+
   return (
-    <div className="product-gallery">
-      <div className="product-image-frame">
-        {imageUrl ? (
-          <img src={imageUrl} alt={name} className="product-detail-image" />
-        ) : (
-          <div className="product-detail-image product-detail-image-empty">
-            No image
-          </div>
-        )}
+    <figure className="product-gallery" aria-label={`${name} product image`}>
+      <div className="product-media-stage">
+        <div className="product-image-frame">
+          {imageUrl ? (
+            <img src={imageUrl} alt={name} className="product-detail-image" />
+          ) : (
+            <div className="product-detail-image-empty">No image</div>
+          )}
+        </div>
       </div>
-    </div>
+    </figure>
   );
 }

@@ -7,49 +7,8 @@
   box-sizing: border-box;
 }
 
-.pagination-controls {
-  max-width: 1360px;
-  margin: 28px auto 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
-
-.pagination-controls button {
-  min-width: 48px;
-  height: 44px;
-  padding: 0 14px;
-  border-radius: 6px;
-  border: 1px solid #dfe3ea;
-  background: #ffffff;
-  color: #111827;
-  cursor: pointer;
-  font-size: 0.95rem;
-  font-weight: 650;
-  transition:
-    background 150ms ease,
-    color 150ms ease,
-    border-color 150ms ease;
-}
-
-.pagination-controls button:hover:not(:disabled),
-.pagination-controls .active-page {
-  background: #111827;
-  color: #ffffff;
-  border-color: #111827;
-}
-
-.pagination-controls button:disabled {
-  cursor: not-allowed;
-  color: #8b929e;
-  background: #ffffff;
-  opacity: 0.72;
-}
-
 @media (max-width: 768px) {
   #products {
     padding: 18px 14px 40px;
   }
-
 }

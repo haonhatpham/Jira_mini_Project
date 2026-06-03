@@ -10,4 +10,5 @@ export const PRODUCT_VALIDATION = {
   ID_MIN: 1,
   MIN_PRICE: 0,
   NAME_MIN_LENGTH: 2,
+  TAG_MAX_LENGTH: 50,
 } as const;
